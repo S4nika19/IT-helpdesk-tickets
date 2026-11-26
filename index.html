@@ -1,95 +1,62 @@
-// IT Helpdesk Tickets - simple ticket system in the browser.
-// Tickets are saved in the browser (localStorage), so they stay after a page reload.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IT Helpdesk Tickets</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>IT Helpdesk Tickets</h1>
+    <p>Report an IT problem and track it until it is solved.</p>
+  </header>
 
-let tickets = JSON.parse(localStorage.getItem("tickets")) || [];
-let currentFilter = "all";
+  <main>
+    <!-- Form to create a new ticket -->
+    <section class="card">
+      <h2>New ticket</h2>
+      <form id="ticket-form">
+        <label for="name">Your name</label>
+        <input type="text" id="name" required>
 
-const form = document.getElementById("ticket-form");
-const list = document.getElementById("ticket-list");
-const counter = document.getElementById("counter");
+        <label for="category">Category</label>
+        <select id="category">
+          <option>Laptop / PC</option>
+          <option>Printer</option>
+          <option>Wi-Fi / Network</option>
+          <option>Email / Microsoft 365</option>
+          <option>Password / Account</option>
+          <option>Other</option>
+        </select>
 
-// Save all tickets in the browser
-function saveTickets() {
-  localStorage.setItem("tickets", JSON.stringify(tickets));
-}
+        <label for="priority">Priority</label>
+        <select id="priority">
+          <option>Low</option>
+          <option selected>Medium</option>
+          <option>High</option>
+        </select>
 
-// Show the tickets on the page
-function showTickets() {
-  list.innerHTML = "";
+        <label for="problem">Describe the problem</label>
+        <textarea id="problem" rows="3" required></textarea>
 
-  // Only show the tickets that match the filter
-  const visible = tickets.filter(function (ticket) {
-    if (currentFilter === "open") return !ticket.solved;
-    if (currentFilter === "solved") return ticket.solved;
-    return true;
-  });
+        <button type="submit">Create ticket</button>
+      </form>
+    </section>
 
-  visible.forEach(function (ticket) {
-    const item = document.createElement("li");
-    if (ticket.solved) item.classList.add("solved");
+    <!-- List of all tickets -->
+    <section class="card">
+      <h2>Tickets</h2>
+      <div class="filters">
+        <button data-filter="all" class="active">All</button>
+        <button data-filter="open">Open</button>
+        <button data-filter="solved">Solved</button>
+      </div>
+      <p id="counter"></p>
+      <ul id="ticket-list"></ul>
+    </section>
+  </main>
 
-    const priorityClass = ticket.priority === "High" ? "high" : "";
-    item.innerHTML =
-      "<strong>#" + ticket.id + " " + ticket.category + "</strong> " +
-      "<span class='" + priorityClass + "'>(" + ticket.priority + ")</span><br>" +
-      escapeText(ticket.problem) + "<br>" +
-      "<span class='small'>From " + escapeText(ticket.name) + " · " + ticket.date +
-      " · " + (ticket.solved ? "Solved" : "Open") + "</span><br>";
-
-    // Button to mark a ticket as solved (or open again)
-    const button = document.createElement("button");
-    button.textContent = ticket.solved ? "Reopen" : "Mark as solved";
-    button.addEventListener("click", function () {
-      ticket.solved = !ticket.solved;
-      saveTickets();
-      showTickets();
-    });
-    item.appendChild(button);
-
-    list.appendChild(item);
-  });
-
-  const openCount = tickets.filter(function (t) { return !t.solved; }).length;
-  counter.textContent = tickets.length + " tickets · " + openCount + " open";
-}
-
-// Stop HTML in user text from breaking the page
-function escapeText(text) {
-  const div = document.createElement("div");
-  div.textContent = text;
-  return div.innerHTML;
-}
-
-// Create a new ticket when the form is sent
-form.addEventListener("submit", function (event) {
-  event.preventDefault();
-
-  const ticket = {
-    id: tickets.length + 1,
-    name: document.getElementById("name").value,
-    category: document.getElementById("category").value,
-    priority: document.getElementById("priority").value,
-    problem: document.getElementById("problem").value,
-    date: new Date().toLocaleDateString(),
-    solved: false
-  };
-
-  tickets.push(ticket);
-  saveTickets();
-  showTickets();
-  form.reset();
-});
-
-// Filter buttons: All / Open / Solved
-document.querySelectorAll(".filters button").forEach(function (button) {
-  button.addEventListener("click", function () {
-    document.querySelectorAll(".filters button").forEach(function (b) {
-      b.classList.remove("active");
-    });
-    button.classList.add("active");
-    currentFilter = button.dataset.filter;
-    showTickets();
-  });
-});
-
-showTickets();
+  <script src="script.js"></script>
+</body>
+</html>
