@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IT Helpdesk Tickets</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>IT Helpdesk Tickets</h1>
+    <p>Report an IT problem and track it until it is solved.</p>
+  </header>
+
+  <main>
+    <!-- Form to create a new ticket -->
+    <section class="card">
+      <h2>New ticket</h2>
+      <form id="ticket-form">
+        <label for="name">Your name</label>
+        <input type="text" id="name" required>
+
+        <label for="category">Category</label>
+        <select id="category">
+          <option>Laptop / PC</option>
+          <option>Printer</option>
+          <option>Wi-Fi / Network</option>
+          <option>Email / Microsoft 365</option>
+          <option>Password / Account</option>
+          <option>Other</option>
+        </select>
+
+        <label for="priority">Priority</label>
+        <select id="priority">
+          <option>Low</option>
+          <option selected>Medium</option>
+          <option>High</option>
+        </select>
+
+        <label for="problem">Describe the problem</label>
+        <textarea id="problem" rows="3" required></textarea>
+
+        <button type="submit">Create ticket</button>
+      </form>
+    </section>
+
+    <!-- List of all tickets -->
+    <section class="card">
+      <h2>Tickets</h2>
+      <div class="filters">
+        <button data-filter="all" class="active">All</button>
+        <button data-filter="open">Open</button>
+        <button data-filter="solved">Solved</button>
+      </div>
+      <p id="counter"></p>
+      <ul id="ticket-list"></ul>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
